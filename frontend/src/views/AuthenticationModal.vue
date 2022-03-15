@@ -27,15 +27,28 @@
             @submit.prevent="submit"
             class="space-y-6"
         >
-          <div v-if="!isSignUp">
-            <label for="username" class="inline text-sm font-medium text-white">
-              Username
-            </label>
-            <div class="mt-1">
+          <div>
+            <div  class="flex justify-between">
+              <label for="username" class="inline text-sm font-medium text-white">
+                Username
+              </label>
+            </div>
+            <div class="mt-2">
               <input v-model="form.username"
                      id="username" name="username" type="text"
                      required
                      class="form-style text-black">
+            </div>
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-white">
+              {{ !isSignUp ? 'Username or ' : '' }} Email address
+            </label>
+            <div class="mt-1">
+              <input v-model="form.email"
+                     id="email" name="email" type="text" autocomplete="email" required
+                     class="form-style">
             </div>
           </div>
 
@@ -48,7 +61,9 @@
             <div class="mt-1">
               <input v-model="form.password"
                      id="password" name="password" type="password"
-                     :autocomplete="[isSignUp ? 'new-password' : 'current-password']" required class="form-style">
+                     :autocomplete="[isSignUp ? 'new-password' : 'current-password']"
+                     required
+                     class="form-style">
             </div>
           </div>
 
