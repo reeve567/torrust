@@ -42,25 +42,13 @@ pub struct Storage {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Mail {
-    pub email_verification_enabled: bool,
-    pub from: String,
-    pub reply_to: String,
-    pub username: String,
-    pub password: String,
-    pub server: String,
-    pub port: u16,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TorrustConfig {
     pub website: Website,
     pub tracker: Tracker,
     pub net: Network,
     pub auth: Auth,
     pub database: Database,
-    pub storage: Storage,
-    pub mail: Mail,
+    pub storage: Storage
 }
 
 #[derive(Debug)]
@@ -102,15 +90,6 @@ impl Configuration {
             },
             storage: Storage {
                 upload_path: "./uploads".to_string()
-            },
-            mail: Mail {
-                email_verification_enabled: false,
-                from: "example@email.com".to_string(),
-                reply_to: "noreply@email.com".to_string(),
-                username: "".to_string(),
-                password: "".to_string(),
-                server: "".to_string(),
-                port: 25
             }
         };
 
