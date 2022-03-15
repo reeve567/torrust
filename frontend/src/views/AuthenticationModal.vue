@@ -35,7 +35,7 @@
               leave-class="opacity-100 scale-100"
               leave-to-class="opacity-0 scale-95"
           >
-            <div v-if="isSignUp">
+            <div>
               <label for="password" class="inline text-sm font-medium text-white">
                 Username
               </label>
