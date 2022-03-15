@@ -7,7 +7,6 @@ pub mod errors;
 pub mod common;
 pub mod auth;
 pub mod tracker;
-pub mod mailer;
 
 trait AsCSV {
     fn as_csv<T>(&self) -> Result<Option<Vec<T>>, ()>

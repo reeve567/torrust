@@ -7,7 +7,6 @@ use torrust::config::{Configuration};
 use torrust::common::AppData;
 use torrust::auth::AuthorizationService;
 use torrust::tracker::TrackerService;
-use torrust::mailer::MailerService;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -23,14 +22,12 @@ async fn main() -> std::io::Result<()> {
     let database = Arc::new(Database::new(&settings.database.connect_url).await);
     let auth = Arc::new(AuthorizationService::new(cfg.clone(), database.clone()));
     let tracker_service = Arc::new(TrackerService::new(cfg.clone(), database.clone()));
-    let mailer_service = Arc::new(MailerService::new(cfg.clone()).await);
     let app_data = Arc::new(
         AppData::new(
             cfg.clone(),
             database.clone(),
             auth.clone(),
             tracker_service.clone(),
-            mailer_service.clone(),
         )
     );
 

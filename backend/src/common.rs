@@ -3,7 +3,6 @@ use crate::config::Configuration;
 use crate::database::Database;
 use crate::auth::AuthorizationService;
 use crate::tracker::TrackerService;
-use crate::mailer::MailerService;
 
 pub type Username = String;
 
@@ -13,18 +12,16 @@ pub struct AppData {
     pub cfg: Arc<Configuration>,
     pub database: Arc<Database>,
     pub auth: Arc<AuthorizationService>,
-    pub tracker: Arc<TrackerService>,
-    pub mailer: Arc<MailerService>
+    pub tracker: Arc<TrackerService>
 }
 
 impl AppData {
-    pub fn new(cfg: Arc<Configuration>, database: Arc<Database>, auth: Arc<AuthorizationService>, tracker: Arc<TrackerService>, mailer: Arc<MailerService>) -> AppData {
+    pub fn new(cfg: Arc<Configuration>, database: Arc<Database>, auth: Arc<AuthorizationService>, tracker: Arc<TrackerService>) -> AppData {
         AppData {
             cfg,
             database,
             auth,
             tracker,
-            mailer,
         }
     }
 }

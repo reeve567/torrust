@@ -10,10 +10,8 @@ use pbkdf2::{
 use std::borrow::Cow;
 use crate::errors::{ServiceResult, ServiceError};
 use crate::common::WebAppData;
-use jsonwebtoken::{DecodingKey, decode, Validation, Algorithm};
 use crate::models::response::OkResponse;
 use crate::models::response::TokenResponse;
-use crate::mailer::VerifyClaims;
 
 pub fn init_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -24,15 +22,12 @@ pub fn init_routes(cfg: &mut web::ServiceConfig) {
                 .route(web::post().to(login)))
             .service(web::resource("/ban/{user}")
                 .route(web::delete().to(ban_user)))
-            .service(web::resource("/verify/{token}")
-                .route(web::get().to(verify_user)))
     );
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Register {
     pub username: String,
-    pub email: String,
     pub password: String,
     pub confirm_password: String,
 }
@@ -71,9 +66,8 @@ pub async fn register(req: HttpRequest, payload: web::Json<Register>, app_data: 
     }
 
     let res = sqlx::query!(
-        "INSERT INTO torrust_users (username, email, password) VALUES ($1, $2, $3)",
+        "INSERT INTO torrust_users (username, password) VALUES ($1, $2)",
         payload.username,
-        payload.email,
         password_hash,
     )
         .execute(&app_data.database.pool)
@@ -83,8 +77,6 @@ pub async fn register(req: HttpRequest, payload: web::Json<Register>, app_data: 
         return if err.code() == Some(Cow::from("2067")) {
             if err.message().contains("torrust_users.username") {
                 Err(ServiceError::UsernameTaken)
-            } else if err.message().contains("torrust_users.email") {
-                Err(ServiceError::EmailTaken)
             } else {
                 Err(ServiceError::InternalServerError)
             }
@@ -107,43 +99,16 @@ pub async fn register(req: HttpRequest, payload: web::Json<Register>, app_data: 
 
     let conn_info = req.connection_info();
 
-    if settings.mail.email_verification_enabled {
-        let mail_res = app_data.mailer.send_verification_mail(
-            &payload.email,
-            &payload.username,
-            format!("{}://{}", conn_info.scheme(), conn_info.host()).as_str()
-        )
-            .await;
-
-        // get user id from user insert res
-        let user_id = res.unwrap().last_insert_rowid();
-
-        if mail_res.is_err() {
-            let _ = app_data.database.delete_user(user_id).await;
-            return Err(ServiceError::FailedToSendVerificationEmail)
-        }
-    } else {
-
-    }
-
     Ok(HttpResponse::Ok())
 }
 
 pub async fn login(payload: web::Json<Login>, app_data: WebAppData) -> ServiceResult<impl Responder> {
     let settings = app_data.cfg.settings.read().await;
 
-    let res = if payload.login.contains('@') {
-        app_data.database.get_user_with_email(&payload.login).await
-    } else {
-        app_data.database.get_user_with_username(&payload.login).await
-    };
+    let res = app_data.database.get_user_with_username(&payload.login).await;
 
     match res {
         Some(user) => {
-            if settings.mail.email_verification_enabled && !user.email_verified {
-                return Err(ServiceError::EmailNotVerified)
-            }
-
             drop(settings);
 
             let parsed_hash = PasswordHash::new(&user.password)?;
@@ -166,41 +131,6 @@ pub async fn login(payload: web::Json<Login>, app_data: WebAppData) -> ServiceRe
         }
         None => Err(ServiceError::WrongPasswordOrUsername)
     }
-}
-
-pub async fn verify_user(req: HttpRequest, app_data: WebAppData) -> String {
-    let settings = app_data.cfg.settings.read().await;
-    let token = req.match_info().get("token").unwrap();
-
-    let token_data = match decode::<VerifyClaims>(
-        token,
-        &DecodingKey::from_secret(settings.auth.secret_key.as_bytes()),
-        &Validation::new(Algorithm::HS256),
-    ) {
-        Ok(token_data) => {
-            if !token_data.claims.iss.eq("email-verification") {
-                return ServiceError::TokenInvalid.to_string()
-            }
-
-            token_data.claims
-        },
-        Err(_) => return ServiceError::TokenInvalid.to_string()
-    };
-
-    drop(settings);
-
-    let res = sqlx::query!(
-        "UPDATE torrust_users SET email_verified = TRUE WHERE username = ?",
-        token_data.sub
-    )
-        .execute(&app_data.database.pool)
-        .await;
-
-    if let Err(_) = res {
-        return ServiceError::InternalServerError.to_string()
-    }
-
-    String::from("Email verified, you can close this page.")
 }
 
 pub async fn ban_user(req: HttpRequest, app_data: WebAppData) -> ServiceResult<impl Responder> {
