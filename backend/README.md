@@ -8,7 +8,6 @@ It allows users to upload and download torrents on a web UI, and tracks peers wi
 ## Features
 * [X] Login / Register
 * [X] Authentication using JWT tokens
-* [X] E-mail verification
 * [X] Torrent Uploading / Downloading
 
 ## Getting started

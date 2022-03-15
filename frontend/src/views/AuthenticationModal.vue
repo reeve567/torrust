@@ -35,7 +35,7 @@
               leave-class="opacity-100 scale-100"
               leave-to-class="opacity-0 scale-95"
           >
-            <div v-if="isSignUp">
+            <div>
               <label for="password" class="inline text-sm font-medium text-white">
                 Username
               </label>
@@ -47,17 +47,6 @@
               </div>
             </div>
           </transition>
-
-          <div>
-            <label for="email" class="block text-sm font-medium text-white">
-              {{ !isSignUp ? 'Username or ' : '' }} Email address
-            </label>
-            <div class="mt-1">
-              <input v-model="form.email"
-                     id="email" name="email" type="text" autocomplete="email" required
-                     class="form-style">
-            </div>
-          </div>
 
           <div>
             <div class="flex justify-between">
@@ -141,7 +130,6 @@ export default {
     isSignUp: false,
     form: {
       username: "",
-      email: "",
       password: "",
       confirm_password: "",
     },
@@ -156,7 +144,7 @@ export default {
           this.toggleMode();
         });
       } else {
-        this.$store.dispatch('login', {login: this.form.email, password: this.form.password});
+        this.$store.dispatch('login', {login: this.form.username, password: this.form.password});
       }
     },
     close() {

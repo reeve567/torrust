@@ -59,7 +59,6 @@ pub struct Configuration {
     // pub auth: Auth,
     // pub database: Database,
     // pub storage: Storage,
-    // pub mail: Mail,
     pub settings: RwLock<TorrustConfig>
 }
 

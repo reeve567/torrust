@@ -112,43 +112,6 @@
           <input type='text' v-model="settings.storage.upload_path">
         </div>
 
-        <!-- Mail -->
-        <h3>Mail</h3>
-        <label>Email Verification Enabled (true or false)</label>
-        <div class="setting-input-container">
-          <input type='text' v-model="settings.mail.email_verification_enabled">
-        </div>
-
-        <label>Server</label>
-        <div class="setting-input-container">
-          <input type='text' v-model="settings.mail.server">
-        </div>
-
-        <label>Port</label>
-        <div class="setting-input-container">
-          <input type='text' v-model="settings.mail.port">
-        </div>
-
-        <label>Username</label>
-        <div class="setting-input-container">
-          <input type='text' v-model="settings.mail.username">
-        </div>
-
-        <label>Password</label>
-        <div class="setting-input-container">
-          <input type='text' v-model="settings.mail.password">
-        </div>
-
-        <label>From</label>
-        <div class="setting-input-container">
-          <input type='text' v-model="settings.mail.from">
-        </div>
-
-        <label>Reply To</label>
-        <div class="setting-input-container">
-          <input type='text' v-model="settings.mail.reply_to">
-        </div>
-
         <button @click="saveSettings" :disabled="settingsChanged || savingSettings" class="changes bg-sky-600 disabled:opacity-50">Save Changes</button>
         <button @click="clearSettings" :disabled="settingsChanged || savingSettings" class="changes ml-2 bg-red-500 disabled:opacity-50">Clear Changes</button>
 
@@ -193,15 +156,6 @@ export default {
       },
       storage: {
         upload_path: ""
-      },
-      mail: {
-        email_verification_enabled: false,
-        from: "",
-        reply_to: "",
-        username: "",
-        password: "",
-        server: "",
-        port: 0
       }
     }
   }),

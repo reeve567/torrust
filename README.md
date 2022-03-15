@@ -9,7 +9,6 @@ Torrust is a suite of client-server software for hosting online torrent indexes.
 
 ### Features
 * [X] User authentication
-* [X] E-mail verification
 * [X] Torrent sharing
 * [X] Torrent searching & filtering
 * [X] Private tracker compatible

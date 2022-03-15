@@ -4,6 +4,7 @@ use actix_web::{ResponseError, HttpResponse, HttpResponseBuilder};
 use actix_web::http::{header, StatusCode};
 use serde::{Deserialize, Serialize};
 use std::error;
+use std::fmt::{Display, Formatter};
 
 pub type ServiceResult<V> = std::result::Result<V, ServiceError>;
 
@@ -18,12 +19,10 @@ pub enum ServiceError {
     )]
     ClosedForRegistration,
 
-    #[display(fmt = "The value you entered for email is not an email")] //405j
-    NotAnEmail,
     #[display(fmt = "The value you entered for URL is not a URL")] //405j
     NotAUrl,
 
-    #[display(fmt = "Invalid username/email or password")]
+    #[display(fmt = "Invalid username or password")]
     WrongPasswordOrUsername,
     #[display(fmt = "Username not found")]
     UsernameNotFound,
@@ -56,13 +55,6 @@ pub enum ServiceError {
 
     #[display(fmt = "Username contains illegal characters")]
     UsernameInvalid,
-
-    /// email is already taken
-    #[display(fmt = "Email not available")]
-    EmailTaken,
-
-    #[display(fmt = "Please verify your email before logging in")]
-    EmailNotVerified,
 
     /// when the a token name is already taken
     /// token not found
@@ -101,9 +93,6 @@ pub enum ServiceError {
     #[display(fmt = "Sorry, we have an error with our tracker connection.")]
     TrackerOffline,
 
-    #[display(fmt = "Failed to send verification email.")]
-    FailedToSendVerificationEmail,
-
     #[display(fmt = "Category already exists..")]
     CategoryExists,
 }
@@ -117,7 +106,6 @@ impl ResponseError for ServiceError {
     fn status_code(&self) -> StatusCode {
         match self {
             ServiceError::ClosedForRegistration => StatusCode::FORBIDDEN,
-            ServiceError::NotAnEmail => StatusCode::BAD_REQUEST,
             ServiceError::NotAUrl => StatusCode::BAD_REQUEST,
             ServiceError::WrongPasswordOrUsername => StatusCode::FORBIDDEN,
             ServiceError::UsernameNotFound => StatusCode::NOT_FOUND,
@@ -133,8 +121,6 @@ impl ResponseError for ServiceError {
 
             ServiceError::UsernameTaken => StatusCode::BAD_REQUEST,
             ServiceError::UsernameInvalid => StatusCode::BAD_REQUEST,
-            ServiceError::EmailTaken => StatusCode::BAD_REQUEST,
-            ServiceError::EmailNotVerified => StatusCode::FORBIDDEN,
 
             ServiceError::TokenNotFound => StatusCode::UNAUTHORIZED,
             ServiceError::TokenExpired => StatusCode::UNAUTHORIZED,

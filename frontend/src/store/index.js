@@ -35,15 +35,6 @@ export default new Vuex.Store({
             },
             storage: {
                 upload_path: ""
-            },
-            mail: {
-                email_verification_enabled: false,
-                from: "",
-                reply_to: "",
-                username: "",
-                password: "",
-                server: "",
-                port: 0
             }
         }
     },
