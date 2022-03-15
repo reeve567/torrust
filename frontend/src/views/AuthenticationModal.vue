@@ -135,7 +135,7 @@ export default {
           this.toggleMode();
         });
       } else {
-        this.$store.dispatch('login', {login: this.form.email, password: this.form.password});
+        this.$store.dispatch('login', {login: this.form.username, password: this.form.password});
       }
     },
     close() {
