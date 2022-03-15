@@ -1,4 +1,4 @@
-CREATE TABLE torrust_categories (
+CREATE TABLE IF NOT EXISTS torrust_categories (
     category_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name VARCHAR(64) NOT NULL UNIQUE
 );
