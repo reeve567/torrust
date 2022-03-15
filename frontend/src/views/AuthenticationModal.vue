@@ -28,7 +28,7 @@
             class="space-y-6"
         >
           <div>
-            <label for="password" class="inline text-sm font-medium text-white">
+            <label for="username" class="inline text-sm font-medium text-white">
               Username
             </label>
             <div class="mt-1">
