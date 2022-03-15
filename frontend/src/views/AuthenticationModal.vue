@@ -27,7 +27,7 @@
             @submit.prevent="submit"
             class="space-y-6"
         >
-          <div>
+          <div v-if="!isSignUp">
             <label for="username" class="inline text-sm font-medium text-white">
               Username
             </label>
