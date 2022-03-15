@@ -27,35 +27,15 @@
             @submit.prevent="submit"
             class="space-y-6"
         >
-          <transition
-              enter-active-class="transition ease-out duration-100 transform"
-              enter-class="opacity-0 scale-95"
-              enter-to-class="opacity-100 scale-100"
-              leave-active-class="transition ease-in duration-75 transform"
-              leave-class="opacity-100 scale-100"
-              leave-to-class="opacity-0 scale-95"
-          >
-            <div v-if="isSignUp">
-              <label for="password" class="inline text-sm font-medium text-white">
-                Username
-              </label>
-              <div class="mt-1">
-                <input v-model="form.username"
-                       id="username" name="username" type="text"
-                       required
-                       class="form-style text-black">
-              </div>
-            </div>
-          </transition>
-
           <div>
-            <label for="email" class="block text-sm font-medium text-white">
-              {{ !isSignUp ? 'Username or ' : '' }} Email address
+            <label for="password" class="inline text-sm font-medium text-white">
+              Username
             </label>
             <div class="mt-1">
-              <input v-model="form.email"
-                     id="email" name="email" type="text" autocomplete="email" required
-                     class="form-style">
+              <input v-model="form.username"
+                     id="username" name="username" type="text"
+                     required
+                     class="form-style text-black">
             </div>
           </div>
 
@@ -64,11 +44,6 @@
               <label for="password" class="inline text-sm font-medium text-white">
                 Password
               </label>
-              <!--              <div v-if="!isSignUp" class="mt-2 text-xs text-right">-->
-              <!--                <a href="#" class="font-medium text-primary-600 hover:text-primary-500">-->
-              <!--                  Forgot your password?-->
-              <!--                </a>-->
-              <!--              </div>-->
             </div>
             <div class="mt-1">
               <input v-model="form.password"
